@@ -106,7 +106,7 @@ async def summarize_video(video: VideoRequest):
 import os
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # Default to Render's assigned port
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
 
 
