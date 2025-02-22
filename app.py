@@ -97,6 +97,7 @@ async def summarize_large_transcript(text_list):
 @app.post("/summarize")
 async def summarize_video(video: VideoRequest):
     video_id = get_video_id(video.url)
+    print("Received URL:", video.url)
     if not video_id:
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
     transcript_list = get_transcript(video_id)
@@ -106,4 +107,5 @@ async def summarize_video(video: VideoRequest):
     return {"summary": summary}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=True)
