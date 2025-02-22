@@ -1,7 +1,5 @@
-fastapi
-uvicorn
-google-generativeai
-google-api-core
+flask
+flask-cors
 youtube-transcript-api
-pydantic
-asyncio
+google-generativeai
+gunicorn
