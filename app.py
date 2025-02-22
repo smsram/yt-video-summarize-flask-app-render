@@ -36,13 +36,18 @@ class VideoRequest(BaseModel):
     url: str
 
 def get_video_id(url: str):
+    print(f"Received URL: {url}")  # Debugging line
     if "youtube.com" in url and "v=" in url:
-        return url.split("v=")[-1].split("&")[0]
+        video_id = url.split("v=")[-1].split("&")[0]
     elif "youtu.be" in url:
-        return url.split("/")[-1].split("?")[0]
-    return None
+        video_id = url.split("/")[-1].split("?")[0]
+    else:
+        video_id = None
+    print(f"Extracted Video ID: {video_id}")  # Debugging line
+    return video_id
 
 def get_transcript(video_id: str):
+    print(f"Fetching transcript for Video ID: {video_id}")  # Debugging line
     try:
         transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
         try:
@@ -50,7 +55,8 @@ def get_transcript(video_id: str):
         except:
             transcript = transcript_list.find_generated_transcript(["en"]).fetch()
         return [t['text'] for t in transcript]
-    except (TranscriptsDisabled, NoTranscriptFound, CouldNotRetrieveTranscript):
+    except (TranscriptsDisabled, NoTranscriptFound, CouldNotRetrieveTranscript) as e:
+        print(f"Transcript error: {e}")  # Debugging line
         return None
 
 def chunk_text(text_list, chunk_size=2000):
