@@ -46,18 +46,25 @@ def get_video_id(url: str):
     print(f"Extracted Video ID: {video_id}")  # Debugging line
     return video_id
 
-def get_transcript(video_id: str):
-    print(f"Fetching transcript for Video ID: {video_id}")  # Debugging line
-    try:
-        transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+def get_transcript(video_id: str, retries=3):
+    print(f"Fetching transcript for Video ID: {video_id}")  
+    for attempt in range(retries):
         try:
-            transcript = transcript_list.find_transcript(["en"]).fetch()
-        except:
-            transcript = transcript_list.find_generated_transcript(["en"]).fetch()
-        return [t['text'] for t in transcript]
-    except (TranscriptsDisabled, NoTranscriptFound, CouldNotRetrieveTranscript) as e:
-        print(f"Transcript error: {e}")  # Debugging line
-        return None
+            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            try:
+                transcript = transcript_list.find_transcript(["en"]).fetch()
+            except:
+                transcript = transcript_list.find_generated_transcript(["en"]).fetch()
+            return [t['text'] for t in transcript]
+        except (TranscriptsDisabled, NoTranscriptFound, CouldNotRetrieveTranscript) as e:
+            print(f"Transcript error: {e}")  
+            return None
+        except Exception as e:
+            print(f"Error fetching transcript: {e}")
+            wait_time = (2 ** attempt) + random.uniform(0, 1)  # Exponential backoff
+            print(f"Retrying in {wait_time:.2f} seconds...")
+            time.sleep(wait_time)
+    return None
 
 def chunk_text(text_list, chunk_size=2000):
     chunks, current_chunk = [], ""
