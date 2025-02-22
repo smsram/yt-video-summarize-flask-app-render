@@ -21,6 +21,8 @@ def get_transcript(video_url):
         transcript_text = "\n".join([f"[{entry['start']:.2f}s] {entry['text']}" for entry in transcript])
         return transcript_text[:8000]  # Limit to 8000 chars to prevent API overflow
     except Exception as e:
+        if "Could not retrieve a transcript" in str(e):
+            return "Error: This video has no subtitles available!"
         return f"Error fetching transcript: {e}"
 
 def summarize_text(text):
