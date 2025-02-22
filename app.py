@@ -103,10 +103,12 @@ async def summarize_video(video: VideoRequest):
     summary = await summarize_large_transcript(transcript_list)
     return {"summary": summary}
 
+import os
+
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 8000))
+    port = int(os.environ.get("PORT", 10000))  # Default to Render's assigned port
     uvicorn.run(app, host="0.0.0.0", port=port)
+
 
 
 # import time
