@@ -1,6 +1,7 @@
 Flask
-google-generativeai
-SpeechRecognition
+gunicorn
 pytube
+google-generativeai
+speechrecognition
 youtube-transcript-api
-Flask-Cors
+flask-cors
