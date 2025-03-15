@@ -9,10 +9,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # 🔹 Enable CORS for frontend calls
 
-# 🔹 Configure Gemini API
-genai.configure(api_key="AIzaSyCM96LDOorxeHp0mopClAdm7wkOOovhWCA")
-
-SCRAPER_API_KEY = "7ac143937f543b6b25adf971e347377e"  # Your Scraper API Key
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+SCRAPER_API_KEY = os.getenv("SCRAPER_API_KEY")
 
 def extract_video_id(url):
     """Extracts video ID from YouTube URL."""
